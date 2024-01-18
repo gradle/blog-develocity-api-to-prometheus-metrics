@@ -23,7 +23,7 @@ public class PrometheusUtils {
             String buildId = buildScanData.keySet().toArray()[i++].toString();
             // Create a gauge metric
             Gauge buildDurationMetric = Gauge.build()
-                    .name("build_duration_" + bsm.projectName.replace("-", "_"))
+                    .name("build_duration_" + bsm.projectName.replace("-", "_").replace(" ", "_"))
                     .help("Duration of the build")
                     .register(registry);
 
@@ -31,7 +31,7 @@ public class PrometheusUtils {
             buildDurationMetric.set(Double.parseDouble(bsm.buildDuration));
 
             // Push metrics to Prometheus
-            System.out.println("Pushing metrics for build " + buildId + " of " + bsm.projectName + " : Duration: "
+            System.out.println("Pushing metrics for build " + buildId + " of " + bsm.projectName.replace("-", "_").replace(" ", "_") + " : Duration: "
                     + bsm.buildDuration);
 
             PushGateway pushGateway = new PushGateway(prometheusGatewayUrl);

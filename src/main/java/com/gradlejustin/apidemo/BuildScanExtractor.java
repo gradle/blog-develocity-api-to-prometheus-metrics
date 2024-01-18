@@ -10,7 +10,7 @@ public class BuildScanExtractor {
 
    public static void main(String[] var0) throws Exception {
 
-      HashMap<String, BuildScanModel> buildScanMetrics = new BuildScanExtractor().discoverBuilds(900);
+      HashMap<String, BuildScanModel> buildScanMetrics = new BuildScanExtractor().discoverBuilds(11900);
       new PrometheusUtils().pushMetrics(buildScanMetrics);
 
    }
@@ -20,6 +20,7 @@ public class BuildScanExtractor {
       String instantString = Long.toString(Instant.now().minus(Duration.ofSeconds(timeSinceSeconds)).toEpochMilli());
       String discoveryUrl = BuildScanServiceConfig.geApiUrl + "?fromInstant=" + instantString;
       String builds = HttpUtils.procUrlRequest(discoveryUrl);
+//      System.out.println ("******** builds ==== ***********=" + builds );
       HashMap<String, BuildScanModel> buildScanMetrics = new HashMap<String, BuildScanModel>();
 
       JSONArray jsonBuilds = new JSONArray(builds);
