@@ -10,7 +10,7 @@ public class BuildScanExtractor {
 
    public static void main(String[] var0) throws Exception {
 
-      HashMap<String, BuildScanModel> buildScanMetrics = new BuildScanExtractor().discoverBuilds(11900);
+      HashMap<String, BuildScanModel> buildScanMetrics = new BuildScanExtractor().discoverBuilds(17200);
       new PrometheusUtils().pushMetrics(buildScanMetrics);
 
    }

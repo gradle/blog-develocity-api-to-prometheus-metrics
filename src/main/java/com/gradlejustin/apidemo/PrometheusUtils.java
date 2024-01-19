@@ -12,26 +12,37 @@ public class PrometheusUtils {
     public void pushMetrics(HashMap<String, BuildScanModel> buildScanData) throws IOException {
 
         // TODO: Replace the following value with your Prometheus PushGateway URL
-        final String PROMETHEUSURL = "localhost:9091";
+//        final String PROMETHEUSURL = "192.168.66.2:9091";
+        final String PROMETHEUSURL = "ec2-52-15-178-164.us-east-2.compute.amazonaws.com:9091";
         String prometheusGatewayUrl = PROMETHEUSURL;
 
         // Traverse the Builds
         int i = 0;
+        CollectorRegistry registry = new CollectorRegistry();
+        Gauge buildDurationMetric = Gauge.build()
+                .name("build_duration")
+                .help("Duration of the build")
+                .labelNames("project")
+                .register(registry);
         for (BuildScanModel bsm : buildScanData.values()) {
 
-            CollectorRegistry registry = new CollectorRegistry();
+//            CollectorRegistry registry = new CollectorRegistry();
             String buildId = buildScanData.keySet().toArray()[i++].toString();
+            String label = bsm.projectName.replace("-", "_").replace(" ", "_").replace(":", "");
+
+            System.out.println("&&&&&&&&&&&&& label ="+label);
             // Create a gauge metric
-            Gauge buildDurationMetric = Gauge.build()
-                    .name("build_duration_" + bsm.projectName.replace("-", "_").replace(" ", "_"))
-                    .help("Duration of the build")
-                    .register(registry);
+//            Gauge buildDurationMetric = Gauge.build()
+//                    .name("build_duration_")
+//                    .help("Duration of the build")
+//                    .labelNames("project")
+//                    .register(registry);
 
             // Set the gauge value
-            buildDurationMetric.set(Double.parseDouble(bsm.buildDuration));
+            buildDurationMetric.labels(label ).set(Double.parseDouble(bsm.buildDuration));
 
             // Push metrics to Prometheus
-            System.out.println("Pushing metrics for build " + buildId + " of " + bsm.projectName.replace("-", "_").replace(" ", "_") + " : Duration: "
+            System.out.println("Pushing metrics for build " + buildId + " of " + label + " : Duration: "
                     + bsm.buildDuration);
 
             PushGateway pushGateway = new PushGateway(prometheusGatewayUrl);
