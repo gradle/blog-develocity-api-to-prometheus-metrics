@@ -18,7 +18,7 @@ export DVTOKEN=token
 export DVURL=develocity-field.gradle.com
 export DVSCRAPETIME=5
 
-nohup ./bin/BuildScanExtractor &
+nohup java -jar ./build/libs/BuildScanExtractor-all.jar  &
 
 ```
 
