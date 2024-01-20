@@ -1,18 +1,45 @@
 package com.gradlejustin.apidemo;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+
+import io.prometheus.client.Counter;
+import io.prometheus.client.Gauge;
+import io.prometheus.client.exporter.HTTPServer;
 
 import org.json.*;
 
+import static java.util.concurrent.TimeUnit.*;
+
 public class BuildScanExtractor {
 
-   public static void main(String[] var0) throws Exception {
+   static public final int SCRAPE_TIME = 5;
+   static public Counter bDurationMetric = Counter.build()
+                                                  .name("build_duration_counter")
+                                                  .help("Duration of the build")
+                                                  .labelNames("project")
+                                                  .register();
+   static public Counter bDNumberMetric = Counter.build()
+                                                .name("build_duration_number_counter")
+                                                .help("number of the build")
+                                                .labelNames("project")
+                                                .register();
+   static public Gauge buildDurationMetric = Gauge.build()
+                                                  .name("build_duration")
+                                                  .help("Duration of the build")
+                                                  .labelNames("project")
+                                                  .register();
 
-      HashMap<String, BuildScanModel> buildScanMetrics = new BuildScanExtractor().discoverBuilds(900);
-      new PrometheusUtils().pushMetrics(buildScanMetrics);
+   public static void main(String[] var0) throws Exception, IOException {
 
+      HTTPServer server = new HTTPServer(8081);
+
+      new GrabMetrics().repeat();
    }
 
    public HashMap<String, BuildScanModel> discoverBuilds(int timeSinceSeconds) throws Exception {
@@ -20,6 +47,7 @@ public class BuildScanExtractor {
       String instantString = Long.toString(Instant.now().minus(Duration.ofSeconds(timeSinceSeconds)).toEpochMilli());
       String discoveryUrl = BuildScanServiceConfig.geApiUrl + "?fromInstant=" + instantString;
       String builds = HttpUtils.procUrlRequest(discoveryUrl);
+      System.out.println ("******** builds ==== ***********=" + builds );
       HashMap<String, BuildScanModel> buildScanMetrics = new HashMap<String, BuildScanModel>();
 
       JSONArray jsonBuilds = new JSONArray(builds);
@@ -48,7 +76,31 @@ public class BuildScanExtractor {
             "\tBuild Start Time: " + myBs.buildStartTime +
             "\tBuild Duration: " + myBs.buildDuration);
       return myBs;
-
    }
 
+}
+
+class GrabMetrics{
+   private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+   public void repeat() {
+      final Runnable logger= new Runnable() {
+         @Override
+         public void run() {
+            HashMap<String, BuildScanModel> buildScanMetrics = null;
+            try {
+               buildScanMetrics = new BuildScanExtractor().discoverBuilds(BuildScanExtractor.SCRAPE_TIME*60);
+               new PrometheusUtils().pushMetrics(buildScanMetrics);
+            } catch (Exception e) {
+               throw new RuntimeException(e);
+            }
+
+         }
+      };
+      final ScheduledFuture loggerHandle =
+              scheduler.scheduleAtFixedRate(logger, 0, BuildScanExtractor.SCRAPE_TIME, MINUTES );
+      //Incase you want to kill this after some time like 24 hours
+//      scheduler.schedule(new Runnable() {
+//         public void run() { loggerHandle.cancel(true); }
+//      }, 24, HOURS );
+   }
 }
