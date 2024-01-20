@@ -28,3 +28,12 @@ Or you can just run from IDE (be sure to set up the env variables).
 
 ### The client metrics server is listening at port 8081.
 
+## Sample UI
+
+There are three metrics created:
+1. Counter: Build Duration
+2. Gauge: Build Duration for the last build
+3. Counter: Number of Builds
+
+
+<p align="center"><img src="/images/dv-api-metrics.png" width="100%" alt="Build Metrics by DEVelocity API" /></p>
