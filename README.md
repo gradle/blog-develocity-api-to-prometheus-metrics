@@ -28,7 +28,7 @@ Or you can just run from IDE (be sure to set up the env variables).
 
 ### The client metrics server is listening at port 8081.
 
-## Sample UI
+## Sample Grafana UI
 
 There are three metrics created:
 1. Counter: Build Duration
@@ -37,3 +37,7 @@ There are three metrics created:
 
 
 <p align="center"><img src="/images/dv-api-metrics.png" width="100%" alt="Build Metrics by DEVelocity API" /></p>
+
+## Sample Alerts to Slack
+
+<p align="center"><img src="/images/alerts-to-slack.png" width="100%" alt="Alerts by DEVelocity API" /></p>
