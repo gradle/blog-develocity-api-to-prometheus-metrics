@@ -18,7 +18,7 @@ import static java.util.concurrent.TimeUnit.*;
 
 public class BuildScanExtractor {
 
-   static public final int SCRAPE_TIME = 5;
+   static public final int SCRAPE_TIME = Integer.parseInt(System.getenv("DVSCRAPETIME"));
    static public Counter bDurationMetric = Counter.build()
                                                   .name("build_duration_counter")
                                                   .help("Duration of the build")
@@ -37,8 +37,10 @@ public class BuildScanExtractor {
 
    public static void main(String[] var0) throws Exception, IOException {
 
+      // Prometheus metrics point
       HTTPServer server = new HTTPServer(8081);
 
+      // scrape DV API periodically
       new GrabMetrics().repeat();
    }
 
@@ -59,7 +61,6 @@ public class BuildScanExtractor {
       }
 
       return buildScanMetrics;
-
    }
 
    public BuildScanModel extractBuildScanDetails(String buildScanId, String buildTool) throws Exception {
@@ -89,7 +90,7 @@ class GrabMetrics{
             HashMap<String, BuildScanModel> buildScanMetrics = null;
             try {
                buildScanMetrics = new BuildScanExtractor().discoverBuilds(BuildScanExtractor.SCRAPE_TIME*60);
-               new PrometheusUtils().pushMetrics(buildScanMetrics);
+               new PrometheusUtils().postMetrics(buildScanMetrics);
             } catch (Exception e) {
                throw new RuntimeException(e);
             }
@@ -98,7 +99,7 @@ class GrabMetrics{
       };
       final ScheduledFuture loggerHandle =
               scheduler.scheduleAtFixedRate(logger, 0, BuildScanExtractor.SCRAPE_TIME, MINUTES );
-      //Incase you want to kill this after some time like 24 hours
+      //In case you want to kill this after some time like 24 hours
 //      scheduler.schedule(new Runnable() {
 //         public void run() { loggerHandle.cancel(true); }
 //      }, 24, HOURS );
