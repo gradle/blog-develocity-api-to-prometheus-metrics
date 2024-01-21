@@ -12,16 +12,16 @@ public class PrometheusUtils {
         for (BuildScanModel bsm : buildScanData.values()) {
 
             String buildId = buildScanData.keySet().toArray()[i++].toString();
-            String label = bsm.projectName.replace("-", "_").replace(" ", "_").replace(":", "");
+            String labelProject = bsm.projectName.replace("-", "_").replace(" ", "_").replace(":", "");
 
             // Set the metrics value
-            BuildScanExtractor.buildDurationMetric.labels(label).set(Double.parseDouble(bsm.buildDuration));
-            BuildScanExtractor.bDurationMetric.labels(label).inc(Double.parseDouble(bsm.buildDuration));
-            BuildScanExtractor.bDNumberMetric.labels(label).inc(1);
+            BuildScanExtractor.buildDurationMetric.labels(labelProject, bsm.localCache, bsm.remoteCache ).set(Double.parseDouble(bsm.buildDuration));
+            BuildScanExtractor.bDurationMetric.labels(labelProject, bsm.localCache, bsm.remoteCache).inc(Double.parseDouble(bsm.buildDuration));
+            BuildScanExtractor.bDNumberMetric.labels(labelProject, bsm.localCache, bsm.remoteCache).inc(1);
 
             // feedbacks
-            System.out.println("Pushing metrics for build " + buildId + " of " + label + " : Duration: "
-                    + bsm.buildDuration);
+            System.out.println("Pushing metrics for build " + buildId + " of " + labelProject + " : Duration: "
+                    + bsm.buildDuration + " : local cache isEnabled: " + bsm.localCache + " : remote cache isEnabled: " + bsm.remoteCache);
 
         }
     }
