@@ -22,17 +22,17 @@ public class BuildScanExtractor {
     static public Counter bDurationMetric = Counter.build()
             .name("build_duration_counter")
             .help("Duration of the build")
-            .labelNames("project")
+            .labelNames("project","local_cache","remote_cache")
             .register();
     static public Counter bDNumberMetric = Counter.build()
             .name("build_duration_number_counter")
             .help("number of the build")
-            .labelNames("project")
+            .labelNames("project","local_cache","remote_cache")
             .register();
     static public Gauge buildDurationMetric = Gauge.build()
             .name("build_duration")
             .help("Duration of the build")
-            .labelNames("project")
+            .labelNames("project","local_cache","remote_cache")
             .register();
 
     public static void main(String[] var0) throws Exception, IOException {
@@ -49,7 +49,7 @@ public class BuildScanExtractor {
         String instantString = Long.toString(Instant.now().minus(Duration.ofSeconds(timeSinceSeconds)).toEpochMilli());
         String discoveryUrl = BuildScanServiceConfig.geApiUrl + "?fromInstant=" + instantString;
         String builds = HttpUtils.procUrlRequest(discoveryUrl);
-        System.out.println("******** builds ==== ***********=" + builds);
+//        System.out.println("******** builds ==== ***********=" + builds);
         HashMap<String, BuildScanModel> buildScanMetrics = new HashMap<String, BuildScanModel>();
 
         JSONArray jsonBuilds = new JSONArray(builds);
@@ -57,25 +57,34 @@ public class BuildScanExtractor {
         for (int i = 0; i < jsonBuilds.length(); i++) {
             String buildScanId = jsonBuilds.getJSONObject(i).getString("id");
             String buildTool = jsonBuilds.getJSONObject(i).getString("buildToolType");
-            buildScanMetrics.put(buildScanId, extractBuildScanDetails(buildScanId, buildTool));
+
+            String buildIDUrl = BuildScanServiceConfig.geApiUrl + buildScanId+ "/gradle-build-cache-performance";
+            String buildCache = HttpUtils.procUrlRequest(buildIDUrl);
+//            System.out.println("******** buildCache ==== ***********=" + buildCache);
+
+            JSONObject jsonBuildCache = new JSONObject(buildCache);
+
+            buildScanMetrics.put(buildScanId, extractBuildScanDetails(buildScanId, buildTool, jsonBuildCache));
         }
 
         return buildScanMetrics;
     }
 
-    public BuildScanModel extractBuildScanDetails(String buildScanId, String buildTool) throws Exception {
+    public BuildScanModel extractBuildScanDetails(String buildScanId, String buildTool, JSONObject jsonBuildCache) throws Exception {
 
         String buildScanApiUrl = BuildScanServiceConfig.geApiUrl + buildScanId + "/";
 
         String tempUrl = buildScanApiUrl + buildTool + "-attributes";
         String tempBuildScanData = HttpUtils.procUrlRequest(tempUrl);
         JSONObject jsonBuildScanData = new JSONObject(tempBuildScanData);
-        BuildScanModel myBs = new BuildScanModel(buildScanId, buildTool, jsonBuildScanData);
+        BuildScanModel myBs = new BuildScanModel(buildScanId, buildTool, jsonBuildScanData, jsonBuildCache);
 
-        System.out.println("Project Name: " + myBs.projectName +
-                "\tBuild Scan ID: " + myBs.buildScanId +
-                "\tBuild Start Time: " + myBs.buildStartTime +
-                "\tBuild Duration: " + myBs.buildDuration);
+//        System.out.println("Project Name: " + myBs.projectName +
+//                "\tBuild Scan ID: " + myBs.buildScanId +
+//                "\tBuild Start Time: " + myBs.buildStartTime +
+//                "\tBuild Duration: " + myBs.buildDuration  +
+//                "\tLocal Cache: " + myBs.localCache +
+//                "\tRemote Cache: " + myBs.remoteCache);
         return myBs;
     }
 
