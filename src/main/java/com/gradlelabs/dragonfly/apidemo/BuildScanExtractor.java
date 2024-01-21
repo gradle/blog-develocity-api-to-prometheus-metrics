@@ -88,6 +88,7 @@ public class BuildScanExtractor {
         JSONObject jsonBuildScanData = new JSONObject(tempBuildScanData);
         BuildScanModel myBs = new BuildScanModel(buildScanId, buildTool, jsonBuildScanData, jsonBuildCache);
 
+
 //        System.out.println("Project Name: " + myBs.projectName +
 //                "\tBuild Scan ID: " + myBs.buildScanId +
 //                "\tBuild Start Time: " + myBs.buildStartTime +
