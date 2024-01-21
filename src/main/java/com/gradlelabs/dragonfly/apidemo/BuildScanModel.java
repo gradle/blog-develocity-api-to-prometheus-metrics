@@ -1,4 +1,4 @@
-package com.gradlejustin.apidemo;
+package com.gradlelabs.dragonfly.apidemo;
 
 import org.json.JSONObject;
 
