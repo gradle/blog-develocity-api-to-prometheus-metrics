@@ -59,11 +59,13 @@ public class BuildScanExtractor {
             String buildScanId = jsonBuilds.getJSONObject(i).getString("id");
             String buildTool = jsonBuilds.getJSONObject(i).getString("buildToolType");
 
-            String buildIDUrl = BuildScanServiceConfig.geApiUrl + buildScanId+ "/gradle-build-cache-performance";
+            String buildIDUrl;
 
             if (buildTool.equals("maven")) {
                 buildIDUrl = BuildScanServiceConfig.geApiUrl + buildScanId+ "/maven-build-cache-performance";
-            }else{
+            }else if (buildTool.equals("gradle")){
+                buildIDUrl = BuildScanServiceConfig.geApiUrl + buildScanId+ "/gradle-build-cache-performance";
+            }else {
                 continue;
             }
             String buildCache = HttpUtils.procUrlRequest(buildIDUrl);
