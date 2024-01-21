@@ -36,7 +36,7 @@ There are three metrics created:
 3. Counter: Number of Builds
 
 
-<p align="center"><img src="/images/dv-api-metrics.png" width="100%" alt="Build Metrics by DEVelocity API" /></p>
+<p align="center"><img src="/images/wall-of-shame.png" width="100%" alt="Build Metrics by DEVelocity API" /></p>
 
 ## Sample Alerts to Slack
 
