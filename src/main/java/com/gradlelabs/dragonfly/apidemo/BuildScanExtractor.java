@@ -39,6 +39,7 @@ public class BuildScanExtractor {
 
         // Prometheus metrics point
         HTTPServer server = new HTTPServer(8081);
+        System.out.println("******** local metrics server started ***********");
 
         // scrape DV API periodically
         new GrabMetrics().repeat();
