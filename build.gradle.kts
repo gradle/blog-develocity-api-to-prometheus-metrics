@@ -1,4 +1,4 @@
-group = "com.gradlejustin"
+group = "com.gradlelabs.dragonfly"
 description = "API demo for Gradle Build Scans"
 
 plugins {
@@ -12,7 +12,7 @@ repositories {
 }
 
 application {
-    mainClass.set("com.gradlejustin.apidemo.BuildScanExtractor")
+    mainClass.set("com.gradlelabs.dragonfly.apidemo.BuildScanExtractor")
 }
 
 dependencies {
@@ -26,9 +26,9 @@ dependencies {
 tasks.register<Jar>("uberJar") {
     archiveClassifier.set("uber")
     if (project.name.equals("kotlin")) {
-        manifest.attributes["Main-Class"] = "com.gradlejustin.apidemo.BuildScanExtractorKt"
+        manifest.attributes["Main-Class"] = "com.gradlelabs.dragonfly.apidemo.BuildScanExtractorKt"
     } else {
-        manifest.attributes["Main-Class"] = "com.gradlejustin.apidemo.BuildScanExtractor"
+        manifest.attributes["Main-Class"] = "com.gradlelabs.dragonfly.apidemo.BuildScanExtractor"
     }
 
     from(sourceSets.main.get().output)
