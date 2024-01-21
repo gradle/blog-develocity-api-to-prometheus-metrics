@@ -16,19 +16,19 @@ Set up the following 3 environment variables
 ```
 export DVTOKEN=token
 export DVURL=develocity-field.gradle.com
+
+# Frequency of the DV API call in minutes
 export DVSCRAPETIME=5
 
 nohup java -jar ./build/libs/BuildScanExtractor-all.jar  &
 
 ```
 
-The distribution in ./build/distributions/
-
 Or you can just run from IDE (be sure to set up the env variables).
 
-### The client metrics server is listening at port 8081.
+Note: the client metrics server is listening at port 8081.
 
-## Sample Grafana UI
+## Sample Grafana Dashboards
 
 There are three metrics created:
 1. Counter: Build Duration
