@@ -68,7 +68,7 @@
         "legend": {
           "displayMode": "list",
           "placement": "bottom",
-          "showLegend": true
+          "showLegend": false
         },
         "rowHeight": 0.9,
         "showValue": "auto",
@@ -91,7 +91,7 @@
           "hide": false,
           "includeNullMetadata": true,
           "instant": false,
-          "legendFormat": "{{project}}(local-cache-{{local_cache}})",
+          "legendFormat": "{{project}}::local-cache({{local_cache}})",
           "range": true,
           "refId": "A",
           "useBackend": false
@@ -105,7 +105,7 @@
           "expr": "build_duration_counter_total{local_cache=\"false\", remote_cache=\"false\"}",
           "hide": false,
           "instant": false,
-          "legendFormat": "{{project}}(local-cache-{{local_cache}})",
+          "legendFormat": "{{project}}::local-cache({{local_cache}})",
           "range": true,
           "refId": "B"
         }
@@ -371,7 +371,7 @@
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "instant": false,
-          "legendFormat": "{{project}}(remote-cache-{{remote_cache}})",
+          "legendFormat": "{{project}}::remote-cache({{remote_cache}})",
           "range": true,
           "refId": "A",
           "useBackend": false
@@ -381,7 +381,7 @@
       "type": "timeseries"
     }
   ],
-  "refresh": "5s",
+  "refresh": "",
   "schemaVersion": 39,
   "tags": [],
   "templating": {
@@ -395,6 +395,6 @@
   "timezone": "",
   "title": "DEVelocity Core Metrics",
   "uid": "f45897e3-c9fb-4d47-ada4-a1c8deed9ec6",
-  "version": 26,
+  "version": 30,
   "weekStart": ""
 }
