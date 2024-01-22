@@ -12,7 +12,8 @@ gradleEnterprise {
     buildScan {
         publishAlways()
         isUploadInBackground = System.getenv("CI") == null
-        tag("onboardingProject")
+        tag("DEVelocity-Metrics-svc")
+        link("Blog","https://gradle.com/blog/visualizing-gradle-enterprise-data-with-prometheus-and-grafana-gradle-enterprise-api-in-action/")
         capture {
             isTaskInputFiles = true
         }
@@ -40,6 +41,5 @@ buildCache {
 //        path = "/cache/exp5-oct-6-2023-take1"
     }
 }
-
 
 rootProject.name = "DEVelocity-Metrics-svc"
