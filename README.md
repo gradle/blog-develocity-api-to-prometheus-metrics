@@ -1,4 +1,4 @@
-# DEVelocity-api-to-prometheus-metrics  
+# Develocity-api-to-prometheus-metrics  
 
 Sample code as a companion to Visualizing Gradle Enterprise Data with Prometheus and Grafana [Blog](https://gradle.com/blog/visualizing-gradle-enterprise-data-with-prometheus-and-grafana-gradle-enterprise-api-in-action/).
 
